@@ -36,7 +36,6 @@ export function SignUpForm() {
 
   async function onSubmit(data: Inputs) {
     try {
-      console.log(data);
       await axios.post("/api/user", data);
       router.push("/sign-in");
     } catch (error) {

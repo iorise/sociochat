@@ -26,7 +26,7 @@ export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = React.useState(false);
-  const callbackUrl = searchParams.get("callbackUrl") || "/profile";
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const form = useForm<Inputs>({
     resolver: zodResolver(loginSchema),
@@ -83,7 +83,7 @@ export function SignInForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input  placeholder="Email" {...field} />
+                <Input placeholder="Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
