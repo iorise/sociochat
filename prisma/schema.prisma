@@ -24,17 +24,17 @@ model Account {
   id_token           String?  @db.Text
   session_state      String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user               User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  sessionToken  String   @unique
+  userId        String
+  expires       DateTime
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -44,11 +44,14 @@ model User {
   email         String?   @unique
   password      String?
   emailVerified DateTime?
-  image         String?
+  image         String    @default("https://i.ibb.co/8x6JhM0/placeholder.png")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  messages      Message[]
+  rooms         Room[]
+  global_chat   Global[]
 }
 
 model VerificationToken {
@@ -57,4 +60,43 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Global {
+  id         String    @id @default(cuid())
+  content    String    @db.Text
+  senderId   String
+
+  user      User  @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Room {
+  id         String   @id @default(cuid())
+  name       String
+
+  members    User[]
+  messages   Message[]
+
+  createdAt  DateTime  @default(now())
+}
+
+model Message {
+  id         String    @id @default(cuid())
+  content    String    @db.Text
+
+  roomId     String?
+  globalId   String?
+  senderId   String
+
+  deleted    Boolean @default(false)
+  isRead     Boolean
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  sender     User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  room       Room?      @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
