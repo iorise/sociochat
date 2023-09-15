@@ -8,6 +8,7 @@ import { AuthProvider } from "@/providers/session-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { siteConfig } from "@/config/site";
+import { QueryProvider } from "@/providers/query-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,13 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, "min-h-screen")}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <AuthProvider>{children}</AuthProvider>
-        </ThemeProvider>
-        <Toaster />
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={cn(inter.className, "min-h-screen")}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <QueryProvider>{children}</QueryProvider>
+          </ThemeProvider>
+          <Toaster />
+        </body>
+      </html>
+    </AuthProvider>
   );
 }

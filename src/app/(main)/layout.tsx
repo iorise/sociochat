@@ -1,4 +1,5 @@
 import { Navigation } from "@/components/layouts/navigation";
+import { RoomList } from "@/components/room-list";
 import { siteConfig } from "@/config/site";
 
 export default function HomeLayout({
