@@ -10,19 +10,24 @@ import { User } from "@prisma/client";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { Icons } from "@/components/icons";
 import { setTransition } from "@/lib/transition";
+import { useChatSocket } from "@/hooks/use-chat-socket";
 
 interface ChatListProps {
   apiUrl: string;
   queryKey: string;
   currentUser: User | null;
-  linkToUser?: string;
+  addKey: string;
+  updateKey: string;
+  socketUrl: string;
 }
 
 export function ChatList({
-  linkToUser,
   currentUser,
   apiUrl,
   queryKey,
+  addKey,
+  updateKey,
+  socketUrl,
 }: ChatListProps) {
   const { ref, inView } = useInView();
 
@@ -34,7 +39,7 @@ export function ChatList({
     isSuccess,
     isLoading,
   } = useChatQuery({
-    apiUrl,
+    apiUrl: apiUrl,
     queryKey,
   });
 
@@ -44,6 +49,11 @@ export function ChatList({
     }
   }, [inView, fetchNextPage, hasNextPage]);
 
+  useChatSocket({
+    queryKey,
+    addKey,
+    updateKey,
+  });
   return (
     <AnimatePresence mode="popLayout">
       <section id="chat-list" className="w-full">
@@ -55,7 +65,7 @@ export function ChatList({
                   return (
                     <motion.div
                       ref={ref}
-                      key={index}
+                      key={message.id}
                       {...setTransition({
                         duration: 0.5,
                       })}
@@ -64,6 +74,7 @@ export function ChatList({
                         key={message.id}
                         message={message}
                         currentUser={currentUser}
+                        socketUrl={socketUrl}
                       />
                     </motion.div>
                   );
@@ -79,6 +90,7 @@ export function ChatList({
                         key={message.id}
                         message={message}
                         currentUser={currentUser}
+                        socketUrl={socketUrl}
                       />
                     </motion.div>
                   );

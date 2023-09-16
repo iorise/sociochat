@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Icons } from "../icons";
+import { Icons } from "@/components/icons";
 
 type Inputs = z.infer<typeof loginSchema>;
 
@@ -26,7 +26,7 @@ export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = React.useState(false);
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams!.get("callbackUrl") || "/";
 
   const form = useForm<Inputs>({
     resolver: zodResolver(loginSchema),

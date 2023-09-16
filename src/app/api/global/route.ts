@@ -1,39 +1,5 @@
-import { getAuthSession } from "@/lib/auth";
 import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const session = await getAuthSession();
-
-    if (!session) {
-      return new NextResponse("No user found", { status: 401 });
-    }
-
-    const { content } = body;
-
-    if (!content) {
-      return new NextResponse("No content provided", {
-        status: 400,
-      });
-    }
-
-    const chat = await db.global.create({
-      data: {
-        senderId: session.user.id,
-        content,
-      },
-    });
-
-    return NextResponse.json(chat);
-  } catch (error) {
-    console.log(error);
-    return new NextResponse("Something went wrong", {
-      status: 500,
-    });
-  }
-}
 
 export async function GET(req: NextRequest) {
   try {
@@ -103,7 +69,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.log(error);
-    return new NextResponse("[CONTENT_GET] Something went wrong", {
+    return new NextResponse("[GLOBAL_MESSAGES_GET]_Something went wrong", {
       status: 500,
     });
   }

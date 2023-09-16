@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import "@/styles/globals.css";
+
 import { Inter } from "next/font/google";
 
 import { cn } from "@/lib/utils";
@@ -9,6 +10,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { siteConfig } from "@/config/site";
 import { QueryProvider } from "@/providers/query-provider";
+import { SocketProvider } from "@/providers/socket-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,9 +29,11 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={cn(inter.className, "min-h-screen")}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <QueryProvider>{children}</QueryProvider>
+            <SocketProvider>
+              <QueryProvider>{children}</QueryProvider>
+              <Toaster />
+            </SocketProvider>
           </ThemeProvider>
-          <Toaster />
         </body>
       </html>
     </AuthProvider>

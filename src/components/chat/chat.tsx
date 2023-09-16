@@ -22,6 +22,9 @@ interface ChatProps {
   linkToUser?: string;
   apiUrl: string;
   queryKey: string;
+  socketUrl: string;
+  addKey: string;
+  updateKey: string;
 }
 
 export function Chat({
@@ -32,9 +35,11 @@ export function Chat({
   image,
   searchQuery,
   url,
-  linkToUser,
   apiUrl,
   queryKey,
+  socketUrl,
+  addKey,
+  updateKey,
 }: ChatProps) {
   const query = qs.stringifyUrl({
     url: url,
@@ -47,7 +52,7 @@ export function Chat({
         <motion.div
           layout
           transition={{
-            type: "tween",
+            type: "spring",
             ease: ease,
             duration: 0.6,
           }}
@@ -56,18 +61,16 @@ export function Chat({
             params ? "hidden md:block" : "block"
           )}
         >
-          <ChatHeader
-            imageUrl={image || ""}
-            name={title!}
-            userUrl={query}
-          />
+          <ChatHeader imageUrl={image || ""} name={title!} userUrl={query} />
           <ChatList
-            linkToUser={linkToUser}
             currentUser={user}
             apiUrl={apiUrl}
             queryKey={queryKey}
+            addKey={addKey}
+            updateKey={updateKey}
+            socketUrl={socketUrl}
           />
-          <ChatInput />
+          <ChatInput socketUrl={socketUrl} />
         </motion.div>
         {params ? (
           <div className="w-full h-full">

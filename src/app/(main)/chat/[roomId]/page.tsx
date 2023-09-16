@@ -37,6 +37,9 @@ export default async function RoomChat({
   return (
     <Chat
       apiUrl="/api/chat"
+      socketUrl="/api/socket/chat"
+      addKey="chat"
+      updateKey="chat:update"
       queryKey="chat"
       user={currentUser}
       otherUser={otherUser}

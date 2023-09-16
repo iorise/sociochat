@@ -13,14 +13,15 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 
-interface ChatInputProps {}
+interface ChatInputProps {
+  socketUrl: string;
+}
 
 const Inputs = z.object({
   content: z.string().min(1),
 });
 
-export function ChatInput({}: ChatInputProps) {
-  const queryClient = useQueryClient();
+export function ChatInput({ socketUrl }: ChatInputProps) {
   const form = useForm<z.infer<typeof Inputs>>({
     resolver: zodResolver(Inputs),
     defaultValues: {
@@ -31,10 +32,13 @@ export function ChatInput({}: ChatInputProps) {
   const isLoading = form.formState.isSubmitting;
 
   async function onSubmit(data: z.infer<typeof Inputs>) {
-    await axios.post("/api/global", data);
-    queryClient.invalidateQueries(["global"]);
-    toast.success("Message sent");
-    form.reset();
+    try {
+      await axios.post(socketUrl, data);
+      toast.success("Message sent");
+      form.reset();
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
   }
   return (
     <Form {...form}>

@@ -26,6 +26,9 @@ export default async function HomePage({
       <RoomList title="Global" roomUrl="/global" />
       <Chat
         apiUrl="/api/global"
+        socketUrl="/api/socket/global"
+        addKey="chat:global:messages"
+        updateKey="chat:global:messages:update"
         queryKey="global"
         title="Global"
         user={user}

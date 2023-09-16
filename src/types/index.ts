@@ -1,5 +1,8 @@
 import { type Icons } from "@/components/icons";
 import { Prisma } from "@prisma/client";
+import { Server as NetServer, Socket } from "net";
+import { NextApiResponse } from "next";
+import { Server as SocketIOServer } from "socket.io";
 
 export interface NavItem {
   title: string;
@@ -10,5 +13,17 @@ export interface NavItem {
 }
 
 export type GlobalWithUser = Prisma.GlobalGetPayload<{
-  include: {user: true};
+  include: { user: true };
 }>;
+
+export type DirectMessageWithUser = Prisma.MessageGetPayload<{
+  include: { sender: true };
+}>
+
+export type NextApiResponseServerIO = NextApiResponse & {
+  socket: Socket & {
+    server: NetServer & {
+      io: SocketIOServer;
+    };
+  };
+};
