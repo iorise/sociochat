@@ -67,6 +67,8 @@ model Global {
   content    String    @db.Text
   senderId   String
 
+  deleted    Boolean @default(false)
+
   user      User  @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
   createdAt  DateTime  @default(now())
