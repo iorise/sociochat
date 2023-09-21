@@ -77,20 +77,19 @@ model Global {
 
 model Room {
   id         String   @id @default(cuid())
-  name       String
 
-  members    User[]
   messages   Message[]
+  members    User[]
 
   createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Message {
   id         String    @id @default(cuid())
   content    String    @db.Text
 
-  roomId     String?
-  globalId   String?
+  roomId     String
   senderId   String
 
   deleted    Boolean @default(false)
@@ -99,6 +98,6 @@ model Message {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
-  sender     User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
-  room       Room?      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  room      Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
