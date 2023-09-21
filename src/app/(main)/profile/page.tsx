@@ -1,7 +1,8 @@
+import { redirect } from "next/navigation";
+
 import { Profile } from "@/components/profile";
 import { getAuthSession } from "@/lib/auth";
 import db from "@/lib/db";
-import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const session = await getAuthSession();

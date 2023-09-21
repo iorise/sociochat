@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { Chat } from "@/components/chat/chat";
 import { RoomList } from "@/components/room-list";
 import { getAuthSession } from "@/lib/auth";
@@ -9,9 +11,12 @@ export default async function HomePage({
   searchParams: { profileId: string };
 }) {
   const session = await getAuthSession();
+  if (!session) {
+    redirect("/sign-in");
+  }
   const user = await db.user.findFirst({
     where: {
-      id: session?.user.id,
+      id: session.user.id,
     },
   });
 
@@ -22,8 +27,8 @@ export default async function HomePage({
   });
 
   return (
-    <div className="flex">
-      <RoomList title="Global" roomUrl="/global" />
+    <div className="grid grid-cols-1 sm:grid-cols-[190px_minmax(0,1fr)] md:grid-cols-[260px_minmax(0,1fr)]">
+      <RoomList title="Global" roomUrl="/global" global />
       <Chat
         apiUrl="/api/global"
         socketUrl="/api/socket/global"
@@ -33,8 +38,8 @@ export default async function HomePage({
         title="Global"
         user={user}
         image="/global.png"
-        params={searchParams.profileId}
-        url="/"
+        profileIdParams={searchParams.profileId}
+        profileUrl={`/`}
         otherUser={otherUser}
       />
     </div>

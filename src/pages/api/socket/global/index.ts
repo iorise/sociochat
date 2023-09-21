@@ -20,6 +20,10 @@ export default async function handler(
       return res.status(401).json({ message: "Unauthorized" });
     }
 
+    if (!content) {
+      return res.status(400).json({ error: "Content missing" });
+    }
+
     const global = await db.global.create({
       data: {
         senderId: session.user.id,
