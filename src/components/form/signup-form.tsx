@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Icons } from "@/components/icons";
 
 type Inputs = z.infer<typeof registerSchema>;
 
@@ -98,7 +99,13 @@ export function SignUpForm() {
             </FormItem>
           )}
         />
-        <Button disabled={isLoading}>Submit</Button>
+        <Button disabled={isLoading} className="active:scale-100">
+          {isLoading ? (
+            <Icons.loader className="w-6 h-6 animate-spin text-muted-foreground" />
+          ) : (
+            "Submit"
+          )}
+        </Button>
       </form>
     </Form>
   );

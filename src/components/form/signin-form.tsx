@@ -41,9 +41,10 @@ export function SignInForm() {
     form.setFocus("email");
   }, []);
 
+  const loginLoading = form.formState.isSubmitting;
+
   async function onSubmit(data: Inputs) {
     try {
-      setIsLoading(true);
       const signInData = await signIn("credentials", {
         email: data.email,
         password: data.password,
@@ -58,8 +59,6 @@ export function SignInForm() {
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -117,10 +116,37 @@ export function SignInForm() {
             </FormItem>
           )}
         />
-        <Button disabled={isLoading}>Log in</Button>
-        <Button type="button" disabled={isLoading} onClick={googleLogin}>
-          <Icons.google className="w-6 h-6" />
-        </Button>
+        <div className="grid w-full items-center gap-3.5">
+          <Button disabled={loginLoading || isLoading}>
+            {loginLoading ? (
+              <Icons.loader className="w-6 h-6 animate-spin text-muted-foreground" />
+            ) : (
+              "Log in"
+            )}
+          </Button>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-4 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          <Button
+            type="button"
+            disabled={isLoading || loginLoading}
+            onClick={googleLogin}
+            className="active:scale-100 "
+          >
+            {isLoading ? (
+              <Icons.loader className="w-6 h-6 animate-spin text-muted-foreground" />
+            ) : (
+              <Icons.google className="w-6 h-6" />
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );
