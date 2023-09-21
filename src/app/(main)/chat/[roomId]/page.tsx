@@ -1,7 +1,8 @@
+import { redirect } from "next/navigation";
+
 import { Chat } from "@/components/chat/chat";
 import { getAuthSession } from "@/lib/auth";
 import db from "@/lib/db";
-import { redirect } from "next/navigation";
 
 export default async function RoomChat({
   params,
@@ -14,13 +15,17 @@ export default async function RoomChat({
   if (!session) {
     redirect("/sign-in");
   }
-  const currentUser = await db.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       id: session.user.id,
     },
   });
 
-  const room = await db.room.findUnique({
+  if (!user) {
+    redirect("/sign-in");
+  }
+
+  const room = await db.room.findFirst({
     where: {
       id: params.roomId,
     },
@@ -29,22 +34,32 @@ export default async function RoomChat({
     },
   });
 
-  const otherUser = await db.user.findFirst({
-    where: {
-      id: searchParams.profileId,
-    },
-  });
+  if (!room) {
+    return null;
+  }
+
+  const otherUser = room.members.find(
+    (currentUser) => currentUser.id !== user.id
+  );
+
+  if (!otherUser) {
+    return null;
+  }
   return (
     <Chat
       apiUrl="/api/chat"
       socketUrl="/api/socket/chat"
-      addKey="chat"
-      updateKey="chat:update"
-      queryKey="chat"
-      user={currentUser}
+      addKey={`chat:${params.roomId}:messages`}
+      updateKey={`chat:${params.roomId}:messages:update`}
+      queryKey={`chat:${params.roomId}:messages`}
+      user={user}
       otherUser={otherUser}
-      params={searchParams.profileId}
-      url={`/chat/${params.roomId}`}
+      otherUserId={`?profileId=${otherUser.id}`}
+      roomParams={params.roomId}
+      profileUrl={`/chat/${params.roomId}`}
+      profileIdParams={searchParams.profileId}
+      title={otherUser?.name}
+      image={otherUser?.image}
     />
   );
 }

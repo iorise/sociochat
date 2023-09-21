@@ -17,7 +17,7 @@ export type GlobalWithUser = Prisma.GlobalGetPayload<{
 }>;
 
 export type DirectMessageWithUser = Prisma.MessageGetPayload<{
-  include: { sender: true };
+  include: { user: true };
 }>
 
 export type NextApiResponseServerIO = NextApiResponse & {
@@ -27,3 +27,7 @@ export type NextApiResponseServerIO = NextApiResponse & {
     };
   };
 };
+
+export type RoomWithUser = Prisma.RoomGetPayload<{
+  include: {members: true}
+}>

@@ -5,7 +5,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
+import qs from "query-string";
 
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -15,13 +15,14 @@ import axios from "axios";
 
 interface ChatInputProps {
   socketUrl: string;
+  roomId: string;
 }
 
 const Inputs = z.object({
   content: z.string().min(1),
 });
 
-export function ChatInput({ socketUrl }: ChatInputProps) {
+export function ChatInput({ socketUrl, roomId }: ChatInputProps) {
   const form = useForm<z.infer<typeof Inputs>>({
     resolver: zodResolver(Inputs),
     defaultValues: {
@@ -33,7 +34,13 @@ export function ChatInput({ socketUrl }: ChatInputProps) {
 
   async function onSubmit(data: z.infer<typeof Inputs>) {
     try {
-      await axios.post(socketUrl, data);
+      const url = qs.stringifyUrl({
+        url: socketUrl,
+        query: {
+          roomId,
+        },
+      });
+      await axios.post(url, data);
       toast.success("Message sent");
       form.reset();
     } catch (error) {

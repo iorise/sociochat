@@ -18,20 +18,27 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
+import { setTransition } from "@/lib/transition";
 
 interface ChatBoxProps {
   message: GlobalWithUser;
   currentUser: User | null;
   socketUrl: string;
+  profileUrl: string;
 }
 
 const formSchema = z.object({
   content: z.string().min(1),
 });
 
-export function ChatBox({ message, currentUser, socketUrl }: ChatBoxProps) {
+export function ChatBox({
+  message,
+  currentUser,
+  socketUrl,
+  profileUrl,
+}: ChatBoxProps) {
   const [isEditing, setIsEditing] = React.useState(false);
-  const isSentByCurrentUser = message.user.id === currentUser?.id;
+  const isSentByCurrentUser = message.user?.id === currentUser?.id;
   const createdAt = format(new Date(message.createdAt), "HH.mm");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -62,17 +69,24 @@ export function ChatBox({ message, currentUser, socketUrl }: ChatBoxProps) {
   }
 
   return (
-    <div
+    <motion.div
+      {...setTransition({
+        duration: 0.5,
+      })}
       className={cn(
         "w-full flex gap-2 items-center transition px-6 py-2",
         isSentByCurrentUser ? "justify-end" : "justify-start"
       )}
     >
       <Link
-        href={`/?profileId=${message.user.id}`}
+        href={`${profileUrl}?profileId=${message.user.id}`}
         className={cn(isSentByCurrentUser && "hidden")}
       >
-        <UserAvatar src={message.user.image} size="sm" />
+        <UserAvatar
+          src={message.user.image}
+          size="sm"
+          className="active:scale-95 transition-all duration-300"
+        />
       </Link>
       <div className="flex flex-col gap-0.5">
         {!isSentByCurrentUser && (
@@ -80,65 +94,70 @@ export function ChatBox({ message, currentUser, socketUrl }: ChatBoxProps) {
             {message.user.name}
           </p>
         )}
-        <div className="flex gap-5 items-center">
-          {isSentByCurrentUser && (
-            <div className="flex gap-2 mr-3">
+        <div className="flex gap-1 items-center">
+          {isSentByCurrentUser &&
+            (!isEditing ? (
               <Button
                 onClick={() => {
                   setIsEditing(!isEditing);
                 }}
                 variant="ghost"
+                className="rounded-full"
               >
                 <Icons.edit className="w-4 h-4" />
               </Button>
-              {isEditing ? (
+            ) : (
+              <div className="flex gap-1">
+                <Button
+                  onClick={() => {
+                    setIsEditing(!isEditing);
+                  }}
+                  variant="ghost"
+                >
+                  X
+                </Button>
                 <Button
                   variant="ghost"
-                  className="rounded-full text-sm"
+                  className="rounded-full"
                   onClick={() =>
                     onSubmit({ content: form.getValues().content })
                   }
                 >
                   <Icons.check className="w-4 h-4" />
                 </Button>
-              ) : (
-                <Button variant="ghost">
-                  <Icons.delete className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
-          )}
+              </div>
+            ))}
           <div
             className={
-              "flex bg-accent items-center px-3 py-1.5 md:px-4 md:py-2.5 rounded-xl w-full max-w-xl break-words"
+              "flex bg-accent items-center px-3 py-1.5 md:px-4 md:py-2.5 rounded-xl"
             }
           >
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                  control={form.control}
-                  name="content"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                        {isEditing ? (
+            {isEditing ? (
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <FormField
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
                           <Input
                             disabled={isLoading}
                             className="px-0 py-0 bg-transparent border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:italic"
                             placeholder="Edit message..."
                             {...field}
                           />
-                        ) : (
-                          <p className="break-all text-sm md:text-base">
-                            {message.content}
-                          </p>
-                        )}
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </form>
-            </Form>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </form>
+              </Form>
+            ) : (
+              <p className="break-all text-sm md:text-base">
+                {message.content}
+              </p>
+            )}
           </div>
         </div>
         <p
@@ -150,6 +169,6 @@ export function ChatBox({ message, currentUser, socketUrl }: ChatBoxProps) {
           {createdAt.toLocaleString()}
         </p>
       </div>
-    </div>
+    </motion.div>
   );
 }
