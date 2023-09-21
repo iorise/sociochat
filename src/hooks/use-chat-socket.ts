@@ -5,17 +5,15 @@ import { DirectMessageWithUser, GlobalWithUser } from "@/types";
 
 import { useSocket } from "@/providers/socket-provider";
 
-interface ChatSocketProps {
+interface ChatSocketProps<T extends GlobalWithUser | DirectMessageWithUser> {
   addKey: string;
   updateKey: string;
   queryKey: string;
 }
 
-export function useChatSocket ({
-  addKey,
-  updateKey,
-  queryKey,
-}: ChatSocketProps) {
+export function useChatSocket<
+  T extends GlobalWithUser | DirectMessageWithUser
+>({ addKey, updateKey, queryKey }: ChatSocketProps<T>) {
   const { socket } = useSocket();
   const queryClient = useQueryClient();
 
@@ -24,7 +22,7 @@ export function useChatSocket ({
       return;
     }
 
-    socket.on(updateKey, (message: GlobalWithUser) => {
+    socket.on(updateKey, (message: T) => {
       queryClient.setQueryData([queryKey], (oldData: any) => {
         if (!oldData || !oldData.pages || oldData.pages.length === 0) {
           return oldData;
@@ -33,7 +31,7 @@ export function useChatSocket ({
         const newData = oldData.pages.map((page: any) => {
           return {
             ...page,
-            data: page.data.map((item: GlobalWithUser) => {
+            data: page.data.map((item: T) => {
               if (item.id === message.id) {
                 return message;
               }
@@ -49,7 +47,7 @@ export function useChatSocket ({
       });
     });
 
-    socket.on(addKey, (message: GlobalWithUser) => {
+    socket.on(addKey, (message: T) => {
       queryClient.setQueryData([queryKey], (oldData: any) => {
         if (!oldData || !oldData.pages || oldData.pages.length === 0) {
           return {
@@ -80,4 +78,4 @@ export function useChatSocket ({
       socket.off(updateKey);
     };
   }, [queryClient, addKey, queryKey, socket, updateKey]);
-};
+}

@@ -11,11 +11,12 @@ const avatarVariants = cva("hover:cursor-pointer", {
         "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
     },
     size: {
-      default: "w-10 md:h-10",
+      default: "w-8 h-8 md:h-10 md:w-10",
       xl: "w-36 h-36",
       lg: "w-24 h-24",
-      md: "w-10 md:h-10",
-      sm: "w-8 h-8",
+      md: "w-8 h-8 md:h-10 md:w-10",
+      sm: "w-6 h-6 md:w-8 md:h-8",
+      xs: "w-7 h-7",
     },
   },
   defaultVariants: {
@@ -39,7 +40,7 @@ export function UserAvatar({
   ...props
 }: UserAvatarProps) {
   return (
-    <Avatar className={cn(avatarVariants({ size }))} {...props}>
+    <Avatar className={cn(avatarVariants({ size }), className)} {...props}>
       <AvatarImage src={src} alt={alt} />
     </Avatar>
   );
