@@ -13,13 +13,20 @@ export function ToggleTheme() {
   React.useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
-  });
+  }, []);
 
   return (
     mounted && (
-      <Button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
-        {theme === "light" ? <Moon /> : <Sun />}
-      </Button>
+      <div className="flex flex-col gap-1 items-center text-muted-foreground tracking-wide md:tracking-widest transition-all duration-300">
+        <p className="capitalize">{theme}</p>
+        <div
+          className="text-primary transition-all hover:cursor-pointer"
+          tabIndex={0}
+          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+        >
+          {theme === "light" ? <Moon /> : <Sun />}
+        </div>
+      </div>
     )
   );
 }

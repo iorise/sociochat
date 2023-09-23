@@ -1,4 +1,4 @@
-import { Home, MessageCircle, type LucideProps, User, SendHorizontal, Loader2, Pen, Trash2, Check, PenSquare, ArrowLeft } from "lucide-react";
+import { Home, MessageCircle, type LucideProps, User, SendHorizontal, Loader2, Pen, Trash2, Check, PenSquare, ArrowLeft, Github, X } from "lucide-react";
 
 export const Icons = {
   home: Home,
@@ -11,6 +11,8 @@ export const Icons = {
   check: Check,
   penSquare: PenSquare,
   arrowLeft: ArrowLeft,
+  github: Github,
+  x: X,
   google: ({ ...props }: LucideProps) => (
     <svg
       viewBox="-0.5 0 48 48"

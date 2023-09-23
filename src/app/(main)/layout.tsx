@@ -12,7 +12,7 @@ export default async function HomeLayout({
     return null;
   }
   return (
-    <div className="flex">
+    <div className="flex md:grid md:grid-cols-[5rem_minmax(0,1fr)]">
       <Navigation items={siteConfig.navItem} image={user.image} />
       <main className="flex w-full flex-col overflow-hidden">{children}</main>
     </div>

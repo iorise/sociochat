@@ -36,10 +36,10 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 0 0% 0%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 0 0% 0%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
@@ -75,7 +75,20 @@
   }
 }
 
-
 .hide-scrollbar::-webkit-scrollbar {
-  display: none
+  display: none;
+}
+
+.animate-underline {
+  background-size: 0 2px;
+  background-position: 0 100%;
+
+  @apply bg-gradient-to-r from-blue-100 to-black dark:to-white bg-no-repeat pb-0.5 no-underline
+    outline-none transition-all duration-150 ease-in-out;
+
+  &:hover,
+  &:focus-visible,
+  &:has(+ div:hover) & {
+    background-size: 100% 2px;
+  }
 }

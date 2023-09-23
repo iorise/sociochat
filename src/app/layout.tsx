@@ -28,7 +28,7 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={cn(inter.className, "min-h-screen")}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <SocketProvider>
               <QueryProvider>{children}</QueryProvider>
               <Toaster />

@@ -56,7 +56,9 @@ export function ChatInput({ socketUrl, roomId }: ChatInputProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="w-full flex px-3 py-2 items-center">
+                <div
+                  className="w-full flex px-3 py-2 items-center"
+                >
                   <Input
                     disabled={isLoading}
                     placeholder="Type a message..."

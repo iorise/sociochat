@@ -25,6 +25,7 @@ interface ChatBoxProps {
   currentUser: User | null;
   socketUrl: string;
   profileUrl: string;
+  roomId?: string;
 }
 
 const formSchema = z.object({
@@ -36,8 +37,10 @@ export function ChatBox({
   currentUser,
   socketUrl,
   profileUrl,
+  roomId,
 }: ChatBoxProps) {
   const [isEditing, setIsEditing] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const isSentByCurrentUser = message.user?.id === currentUser?.id;
   const createdAt = format(new Date(message.createdAt), "HH.mm");
 
@@ -48,14 +51,14 @@ export function ChatBox({
     },
   });
 
-  const isLoading = form.formState.isSubmitting;
-
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
+      setIsLoading(true);
       const url = qs.stringifyUrl({
         url: `${socketUrl}/${message.id}`,
         query: {
           messageId: message.id,
+          roomId,
         },
       });
 
@@ -65,8 +68,16 @@ export function ChatBox({
       setIsEditing(false);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
+
+  React.useEffect(() => {
+    form.reset({
+      content: message.content,
+    });
+  }, [message.content]);
 
   return (
     <motion.div
@@ -90,7 +101,7 @@ export function ChatBox({
       </Link>
       <div className="flex flex-col gap-0.5">
         {!isSentByCurrentUser && (
-          <p className="break-words text-sm md:text-base font-bold px-3">
+          <p className="break-words text-sm md:text-base font-bold">
             {message.user.name}
           </p>
         )}
@@ -103,30 +114,11 @@ export function ChatBox({
                 }}
                 variant="ghost"
                 className="rounded-full"
+                type="button"
               >
                 <Icons.edit className="w-4 h-4" />
               </Button>
-            ) : (
-              <div className="flex gap-1">
-                <Button
-                  onClick={() => {
-                    setIsEditing(!isEditing);
-                  }}
-                  variant="ghost"
-                >
-                  X
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="rounded-full"
-                  onClick={() =>
-                    onSubmit({ content: form.getValues().content })
-                  }
-                >
-                  <Icons.check className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
+            ) : null)}
           <div
             className={
               "flex bg-accent items-center px-3 py-1.5 md:px-4 md:py-2.5 rounded-xl"
@@ -134,7 +126,7 @@ export function ChatBox({
           >
             {isEditing ? (
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                   <FormField
                     control={form.control}
                     name="content"
@@ -143,7 +135,8 @@ export function ChatBox({
                         <FormControl>
                           <Input
                             disabled={isLoading}
-                            className="px-0 py-0 bg-transparent border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:italic"
+                            readOnly={!isEditing}
+                            className="px-0 py-0 bg-transparent border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:italic disabled:pointer-events-none"
                             placeholder="Edit message..."
                             {...field}
                           />
@@ -151,6 +144,24 @@ export function ChatBox({
                       </FormItem>
                     )}
                   />
+                  <div className="flex gap-1">
+                    <Button
+                      onClick={() => {
+                        setIsEditing(false);
+                      }}
+                      type="button"
+                      variant="ghost"
+                    >
+                      <Icons.x className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="rounded-full"
+                      disabled={!form.formState.isValid || isLoading}
+                    >
+                      <Icons.check className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </form>
               </Form>
             ) : (

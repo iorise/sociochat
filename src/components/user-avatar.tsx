@@ -12,7 +12,7 @@ const avatarVariants = cva("hover:cursor-pointer", {
     },
     size: {
       default: "w-8 h-8 md:h-10 md:w-10",
-      xl: "w-36 h-36",
+      xl: "w-24 h-24 md:w-36 md:h-36",
       lg: "w-24 h-24",
       md: "w-8 h-8 md:h-10 md:w-10",
       sm: "w-6 h-6 md:w-8 md:h-8",

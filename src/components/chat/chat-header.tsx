@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { UserAvatar } from "@/components/user-avatar";
 import { Icons } from "@/components/icons";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface ChatHeaderProps {
@@ -21,12 +21,12 @@ export function ChatHeader({
   profileUrl,
   otherUserId,
 }: ChatHeaderProps) {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const handleGoBack = () => {
     window.history.back();
   };
   return (
-    <div className="flex px-3 sm:px-8 container items-center gap-2.5 h-14 border-b">
+    <div className="flex px-3 sm:px-8 items-center gap-2.5 h-14 border-b">
       <Button
         variant="ghost"
         onClick={handleGoBack}

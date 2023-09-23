@@ -7,6 +7,10 @@ import { Balancer } from "react-wrap-balancer";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Shell } from "@/components/shell";
@@ -14,15 +18,18 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { setTransition } from "@/lib/transition";
-import { ToggleTheme } from "@/components/ui/toggle-theme";
 import { UserAvatar } from "@/components/user-avatar";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/use-modal";
-import { toast } from "sonner";
+import { Footer } from "@/components/layouts/footer";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { settingsSchema } from "@/lib/validations/user";
 
 interface ProfileProps {
   user: User;
 }
+
+type Inputs = z.infer<typeof settingsSchema>;
 
 export function Profile({ user }: ProfileProps) {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -43,9 +50,18 @@ export function Profile({ user }: ProfileProps) {
     }
   }
 
+  const form = useForm<Inputs>({
+    resolver: zodResolver(settingsSchema),
+    defaultValues: {
+      image: user.image,
+    },
+  });
+
+  function imageSubmit(data: Inputs) {}
+
   const createdAt = format(new Date(user.createdAt), "MMMM - do - yyyy");
   return (
-    <Shell as="div" className="px-8 md:px-16 max-w-4xl">
+    <Shell as={motion.div} className="max-w-4xl">
       <motion.section
         {...setTransition({
           typeIn: "spring",
@@ -74,6 +90,17 @@ export function Profile({ user }: ProfileProps) {
         </div>
         <Separator />
       </motion.section>
+      <Modal open={open} closeModal={closeModal} modalClassName="max-w-lg">
+        <Image
+          src={user.image}
+          alt={user.name || ""}
+          sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
+          width={200}
+          height={200}
+          loading="lazy"
+          className="rounded-full aspect-square object-cover"
+        />
+      </Modal>
       <motion.section
         {...setTransition({
           typeIn: "spring",
@@ -106,9 +133,6 @@ export function Profile({ user }: ProfileProps) {
         </div>
         <Separator />
       </motion.section>
-      <Modal open={open} closeModal={closeModal} action>
-        <div>change image here</div>
-      </Modal>
       <motion.section
         {...setTransition({
           typeIn: "spring",
@@ -126,7 +150,17 @@ export function Profile({ user }: ProfileProps) {
         >
           Log out
         </Button>
-        <ToggleTheme />
+      </motion.section>
+      <motion.section
+        {...setTransition({
+          typeIn: "spring",
+          distanceY: 100,
+          delay: 0.6,
+        })}
+        id="footer"
+        className="w-full"
+      >
+        <Footer />
       </motion.section>
     </Shell>
   );
