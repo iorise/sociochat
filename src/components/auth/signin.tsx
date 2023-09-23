@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { SignInForm } from "@/components/form/signin-form";
@@ -13,6 +12,7 @@ import {
 import { siteConfig } from "@/config/site";
 import { Shell } from "@/components/shell";
 import { setTransition } from "@/lib/transition";
+import CustomLink from "@/components/custom-link";
 
 export function SignIn() {
   return (
@@ -33,11 +33,9 @@ export function SignIn() {
           <CardFooter>
             <p className="text-muted-foreground">
               Not registered?{" "}
-              <span className="hover:border-b hover:border-primary hover:text-primary transition-all">
-                <Link href="/sign-up" className="">
-                  Sign up
-                </Link>
-              </span>
+              <CustomLink href="/sign-up" className="hover:text-primary">
+                Sign up
+              </CustomLink>
             </p>
           </CardFooter>
         </Card>

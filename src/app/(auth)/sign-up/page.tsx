@@ -5,7 +5,7 @@ import { SignUp } from "@/components/auth/signup";
 
 export default async function SignUpPage() {
   const session = await getAuthSession();
-  if (session) redirect("/profile");
+  if (session) redirect("/");
 
   return <SignUp />;
 }
