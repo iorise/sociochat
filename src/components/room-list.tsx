@@ -35,6 +35,24 @@ export function RoomList({
     threshold: 0.5,
   });
 
+  const {
+    data: conversation,
+    hasNextPage,
+    fetchNextPage,
+    isSuccess,
+    isLoading,
+    isFetchingNextPage,
+  } = useInfiniteScroll({
+    apiUrl: apiUrl as string,
+    queryKey: queryKey as string,
+  });
+
+  React.useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage, isFetchingNextPage]);
+
   if (global) {
     return (
       <section
@@ -62,24 +80,6 @@ export function RoomList({
       </section>
     );
   }
-
-  const {
-    data: conversation,
-    hasNextPage,
-    fetchNextPage,
-    isSuccess,
-    isLoading,
-    isFetchingNextPage,
-  } = useInfiniteScroll({
-    apiUrl: apiUrl as string,
-    queryKey: queryKey as string,
-  });
-
-  React.useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
     <section
