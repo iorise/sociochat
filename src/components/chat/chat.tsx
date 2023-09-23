@@ -53,10 +53,8 @@ export function Chat({
         <motion.div
           // layout
           transition={{
-            type: "spring",
-            duration: 0.6,
             layout: {
-              duration: 2,
+              duration: 0.3,
             },
           }}
           className={cn(

@@ -14,26 +14,44 @@ export default async function handler(
 
   try {
     const session = await getServerSession(req, res, authOptions);
-    const { messageId } = req.query;
+    const { messageId, roomId } = req.query;
     const { content } = req.body;
 
     if (!session) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    let global = await db.global.findFirst({
+    const room = await db.room.findFirst({
+      where: {
+        id: roomId as string,
+        members: {
+          some: {
+            id: session.user.id,
+          },
+        },
+      },
+    });
+
+    if (!room) {
+      return res.status(404).json({ error: "Room not found" });
+    }
+
+    let message = await db.message.findFirst({
       where: {
         id: messageId as string,
+        roomId: roomId as string,
       },
       include: {
         user: true,
+        room: true,
       },
     });
 
     if (req.method === "DELETE") {
-      global = await db.global.update({
+      message = await db.message.update({
         where: {
           id: messageId as string,
+          roomId: roomId as string,
         },
         data: {
           content: "This message has been deleted",
@@ -41,30 +59,34 @@ export default async function handler(
         },
         include: {
           user: true,
+          room: true,
         },
       });
     }
 
     if (req.method === "PATCH") {
-      global = await db.global.update({
+      message = await db.message.update({
         where: {
           id: messageId as string,
+          roomId: roomId as string,
         },
         data: {
           content,
         },
         include: {
           user: true,
+          room: true,
         },
       });
     }
 
-    const updateKey = "chat:global:messages:update";
-    res?.socket?.server?.io.emit(updateKey, global);
+    const updateKey = `chat:${roomId}:messages:update`;
+    res?.socket?.server?.io.emit(updateKey, message);
 
-    return res.status(200).json(global);
+
+    return res.status(200).json(message);
   } catch (error) {
-    console.log("[GLOBAL_MESSAGES_EDIT] ", error);
+    console.log("[CHAT_MESSAGES_EDIT] ", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }

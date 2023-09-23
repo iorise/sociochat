@@ -20,7 +20,7 @@ interface ChatListProps {
   addKey: string;
   updateKey: string;
   socketUrl: string;
-  roomId: string;
+  roomId?: string;
   profileUrl: string;
 }
 
@@ -84,7 +84,6 @@ export function ChatList({
           ) : (
             data?.pages.map((page) =>
               page.data.map((message: GlobalWithUser, index: number) => {
-                console.log("length: ", page.data.length);
                 return page.data.length === index + 1 ? (
                   <div ref={ref} key={message.id}>
                     <ChatBox
@@ -93,6 +92,7 @@ export function ChatList({
                       currentUser={currentUser}
                       socketUrl={socketUrl}
                       profileUrl={profileUrl}
+                      roomId={roomId}
                     />
                   </div>
                 ) : (
@@ -102,6 +102,7 @@ export function ChatList({
                     currentUser={currentUser}
                     socketUrl={socketUrl}
                     profileUrl={profileUrl}
+                    roomId={roomId}
                   />
                 );
               })

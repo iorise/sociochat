@@ -16,4 +16,5 @@ export const siteConfig = {
       icon: "chat",
     },
   ] satisfies NavItem[],
+  github: "https://github.com/iorise",
 };
