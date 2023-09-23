@@ -39,6 +39,8 @@ export function SignInForm() {
 
   React.useEffect(() => {
     form.setFocus("email");
+    
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loginLoading = form.formState.isSubmitting;
