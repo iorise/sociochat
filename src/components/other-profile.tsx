@@ -57,7 +57,7 @@ export function OtherProfile({ user, otherUser }: OtherProfileProps) {
     }
   };
 
-  const createdAt = format(new Date(otherUser!.createdAt), "MMMM - do - yyyy");
+  const createdAt = format(new Date(otherUser!.createdAt), "MMMM - d - yyyy");
   return (
     <div className="flex flex-col gap-10 container w-full h-full border-l">
       <section className="mx-[-6rem] flex sm:px-8 items-center gap-2.5 h-14 border-b">
