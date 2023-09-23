@@ -28,7 +28,11 @@ export default async function HomePage({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[190px_minmax(0,1fr)] md:grid-cols-[260px_minmax(0,1fr)]">
-      <RoomList title="Global" roomUrl="/global" global />
+      <RoomList
+        title="Global"
+        roomUrl="/global"
+        global
+      />
       <Chat
         apiUrl="/api/global"
         socketUrl="/api/socket/global"

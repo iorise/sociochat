@@ -6,7 +6,7 @@ import db from "@/lib/db";
 
 export default async function ProfilePage() {
   const session = await getAuthSession();
-  if (!session?.user) redirect("/sign-in");
+  if (!session) redirect("/sign-in");
 
   const user = await db.user.findUnique({
     where: {
