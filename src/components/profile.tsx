@@ -23,7 +23,7 @@ import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/use-modal";
 import { Footer } from "@/components/layouts/footer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { settingsSchema } from "@/lib/validations/user";
+import { settingsSchema } from "@/lib/validations/settings";
 
 interface ProfileProps {
   user: User;
