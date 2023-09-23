@@ -7,7 +7,7 @@ import { Icons } from "@/components/icons";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t bg-background">
+    <footer className="w-full border-t bg-background pb-10 md:pb-0">
       <div className="pt-10 md:pt-16 flex items-center justify-between text-sm md:text-base">
         <section className="flex flex-col items-center gap-1">
           <p className="tracking-wide md:tracking-widest text-muted-foreground inline-flex">
