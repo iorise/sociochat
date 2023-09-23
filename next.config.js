@@ -9,7 +9,7 @@ const nextConfig = {
     return config
   },
   images: {
-    domains: ["uploadthing.com", "lh3.googleusercontent.com"],
+    domains: ["uploadthing.com", "lh3.googleusercontent.com", "i.ibb.co"],
   },
   experimental: {
     appDir: true,
