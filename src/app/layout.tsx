@@ -17,6 +17,40 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: siteConfig.name,
   description: siteConfig.description,
+  keywords: [
+    "Sociochat",
+    "Next.js",
+    "React",
+    "Node.js",
+    "Server Components",
+    "Server Actions",
+    "Chat",
+    "Chat App",
+    "Realtime Chat",
+    "Realtime Chat App",
+  ],
+  authors: [
+    {
+      name: "iorise",
+      url: "https://github.com/iorise",
+    },
+  ],
+  creator: "iorise",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteConfig.url,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -27,7 +61,7 @@ export default function RootLayout({
   return (
     <AuthProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={cn(inter.className, "min-h-screen")}>
+        <body className={cn(inter.className, "min-h-screen antialiased")}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <SocketProvider>
               <QueryProvider>{children}</QueryProvider>

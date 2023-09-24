@@ -49,7 +49,7 @@ export function ChatInput({ socketUrl, roomId }: ChatInputProps) {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="fixed w-full bottom-14 md:bottom-0">
         <FormField
           control={form.control}
           name="content"
