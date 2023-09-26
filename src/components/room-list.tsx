@@ -3,7 +3,7 @@
 import React from "react";
 import { User } from "@prisma/client";
 import { useInView } from "react-intersection-observer";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Heading, PageHeaderHeading } from "@/components/heading";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,6 +13,7 @@ import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { Loader } from "@/components/loader";
+import { Button } from "@/components/ui/button";
 
 interface RoomListProps {
   title: string;
@@ -31,9 +32,14 @@ export function RoomList({
   global,
 }: RoomListProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { ref, inView } = useInView({
     threshold: 0.5,
   });
+
+  const handleGoBack = () => {
+    router.push("/");
+  };
 
   const {
     data: conversation,
@@ -64,7 +70,9 @@ export function RoomList({
         )}
       >
         <Heading>
-          <PageHeaderHeading>{title}</PageHeaderHeading>
+          <PageHeaderHeading className="flex gap-2.5">
+            {title}
+          </PageHeaderHeading>
         </Heading>
         <ScrollArea className="w-full h-[calc(100vh-_7rem)] md:h-[calc(100vh-_3.5rem)] border-r">
           <div
@@ -91,7 +99,12 @@ export function RoomList({
       )}
     >
       <Heading>
-        <PageHeaderHeading>{title}</PageHeaderHeading>
+        <PageHeaderHeading className="gap-2.5">
+          <Button variant="ghost" onClick={handleGoBack}>
+            <Icons.arrowLeft className={cn("w-6 h-6 block md:hidden")} />
+          </Button>
+          {title}
+        </PageHeaderHeading>
       </Heading>
       <ScrollArea className="w-full h-[calc(100vh-_7rem)] md:h-[calc(100vh-_3.5rem)] border-r">
         {isSuccess ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { UserAvatar } from "@/components/user-avatar";
 import { Icons } from "@/components/icons";
@@ -21,9 +21,10 @@ export function ChatHeader({
   profileUrl,
   otherUserId,
 }: ChatHeaderProps) {
+  const router = useRouter();
   const pathname = usePathname();
   const handleGoBack = () => {
-    window.history.back();
+    router.push("/chat");
   };
   return (
     <div className="flex px-3 sm:px-8 items-center gap-2.5 h-14 border-b">
@@ -32,7 +33,7 @@ export function ChatHeader({
         onClick={handleGoBack}
         className={cn(pathname === "/" ? "hidden" : "block sm:hidden")}
       >
-        <Icons.arrowLeft className="w-4 h-4" />
+        <Icons.arrowLeft className="w-6 h-6" />
       </Button>
       <Link href={profileUrl + otherUserId} passHref>
         <div className="flex w-full items-center gap-3">

@@ -21,7 +21,7 @@ export function Heading({
 }
 
 const headingVariants = cva(
-  "font-bold leading-tight tracking-tighter lg:leading-[1.1] h-14 items-center px-4 flex bg-background border-b border-r",
+  "font-bold leading-tight tracking-tighter lg:leading-[1.1] h-14 items-center px-3 flex bg-background border-b border-r",
   {
     variants: {
       size: {
